@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/TeriMoni/learngit/
+          username: 351111617@qq.com
+          password: ssssssss
+server:
+  port: 1201
