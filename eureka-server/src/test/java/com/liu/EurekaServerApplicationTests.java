@@ -1,4 +1,4 @@
-package com.liu.eurekaserver;
+package com.liu;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
