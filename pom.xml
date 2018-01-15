@@ -26,5 +26,6 @@
         <module>eureka-consumer-ribbon-hystrix</module>
         <module>hystrix-dashboard</module>
         <module>turbine</module>
+        <module>api-gateway</module>
     </modules>
 </project>
