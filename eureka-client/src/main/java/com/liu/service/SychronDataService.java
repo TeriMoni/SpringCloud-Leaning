@@ -1,6 +1,11 @@
 package com.liu.service;
 
+import com.liu.mapper.AppInfoMapper;
+import com.liu.model.AppInfo;
+import com.liu.repository.AppInfoRepository;
+import com.liu.repository.UserRepository;
 import com.liu.utils.DateUtil;
+import com.liu.utils.JsonUtil;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
@@ -8,8 +13,10 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.noggit.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -18,6 +25,9 @@ import java.util.*;
 
 @Service
 public class SychronDataService {
+
+    @Autowired
+    AppInfoMapper appInfoMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(SychronDataService.class);
 
@@ -115,9 +125,64 @@ public class SychronDataService {
         return queryMap;
     }
 
+
+    public Map<String, String[]> getQueryString(){
+        Map<String, String[]> queryMap = new HashMap<String, String[]>();
+        queryMap.put("q", new String[]{"*:*"});
+        return queryMap;
+    }
+
     public CloudSolrClient connect(String zkHostString) {
         CloudSolrClient client = new CloudSolrClient.Builder().withZkHost(zkHostString).build();
         return client;
     }
 
+    public void permission() {
+        CloudSolrClient applatestClient= connect("192.168.113.123:2181,192.168.113.124:2181");
+        applatestClient.setDefaultCollection("applatest_core");
+        Integer pageNow = 0;
+        while(true){
+            logger.info("当前索引位置-->{}",pageNow);
+            QueryResponse queryResponse = query(applatestClient,getQueryString(), pageNow);
+            if(queryResponse == null){
+                break;
+            }
+            SolrDocumentList documentList = queryResponse.getResults();
+            if(documentList.size() == 0){
+                break;
+            }
+            List<AppInfo> data = getAppInfo(documentList);
+            appInfoMapper.batchUpdataData(data);
+            pageNow += PAGENUM;
+        }
+    }
+
+    private  List<AppInfo> getAppInfo(SolrDocumentList documentList) {
+        List<AppInfo> result = new ArrayList<AppInfo>();
+        for (SolrDocument solrDocument : documentList) {
+            AppInfo appInfo = new AppInfo();
+            List<String> persmission = (List<String>) solrDocument.getFieldValue("permission");
+            appInfo.setAppName(solrDocument.getFieldValue("name") == null ? "" : (String) solrDocument.getFieldValue("name"));
+            appInfo.setPermission(persmission == null ? "" : JsonUtil.getJsonString4JavaList(persmission));
+            result.add(appInfo);
+        }
+        return  result;
+    }
+
+    private QueryResponse query(CloudSolrClient client, Map<String, String[]> map,Integer start ) {
+        SolrQuery query = new SolrQuery();
+        QueryResponse response = null;
+        try {
+            for (Map.Entry<String, String[]> entry : map.entrySet()) {
+                query.set(entry.getKey(), entry.getValue());
+            }
+            query.setFields("md5,permission,name");
+            query.setStart(start);
+            query.setRows(PAGENUM);
+            response = client.query(query);
+        } catch (Exception e) {
+            logger.info("综合查询solr查询报错", e);
+        }
+        return response;
+    }
 }
