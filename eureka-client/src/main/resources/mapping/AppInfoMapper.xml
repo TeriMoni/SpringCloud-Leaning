@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liu.mapper.AppInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.liu.model.AppInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="app_name" property="appName" jdbcType="VARCHAR" />
+    <result column="industry_name" property="industryName" jdbcType="VARCHAR" />
+    <result column="brief" property="brief" jdbcType="VARCHAR" />
+    <result column="permission" property="permission" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.liu.model.AppInfo" extends="BaseResultMap" >
+    <result column="app_intro" property="appIntro" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, app_name, industry_name, brief, permission
+  </sql>
+  <sql id="Blob_Column_List" >
+    app_intro
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_info_mainstream
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from app_info_mainstream
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.liu.model.AppInfo" >
+    insert into app_info_mainstream (id, app_name, industry_name, 
+      brief, permission, app_intro
+      )
+    values (#{id,jdbcType=INTEGER}, #{appName,jdbcType=VARCHAR}, #{industryName,jdbcType=VARCHAR}, 
+      #{brief,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR}, #{appIntro,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.liu.model.AppInfo" >
+    insert into app_info_mainstream
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="appName != null" >
+        app_name,
+      </if>
+      <if test="industryName != null" >
+        industry_name,
+      </if>
+      <if test="brief != null" >
+        brief,
+      </if>
+      <if test="permission != null" >
+        permission,
+      </if>
+      <if test="appIntro != null" >
+        app_intro,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="appName != null" >
+        #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="industryName != null" >
+        #{industryName,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null" >
+        #{brief,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="appIntro != null" >
+        #{appIntro,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.liu.model.AppInfo" >
+    update app_info_mainstream
+    <set >
+      <if test="appName != null" >
+        app_name = #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="industryName != null" >
+        industry_name = #{industryName,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null" >
+        brief = #{brief,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="appIntro != null" >
+        app_intro = #{appIntro,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.liu.model.AppInfo" >
+    update app_info_mainstream
+    set app_name = #{appName,jdbcType=VARCHAR},
+      industry_name = #{industryName,jdbcType=VARCHAR},
+      brief = #{brief,jdbcType=VARCHAR},
+      permission = #{permission,jdbcType=VARCHAR},
+      app_intro = #{appIntro,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.liu.model.AppInfo" >
+    <foreach collection="list" item="item" index="index" open=""
+             close="" separator=";">
+      update app_info_mainstream
+      <set>
+        permission =
+        #{item.permission,jdbcType=VARCHAR}
+      </set>
+      where app_name =#{item.appName,jdbcType=INTEGER}
+    </foreach>
+  </update>
+
+  <update id="batchUpdataData" parameterType="java.util.List">
+      <foreach collection="list" item="item" index="index" open=""
+               close="" separator=";">
+          update app_info_mainstream
+          <set>
+            permission = #{item.permission,jdbcType=LONGVARCHAR}
+          </set>
+          where app_name =#{item.appName,jdbcType=VARCHAR}
+      </foreach>
+  </update>
+</mapper>
