@@ -3,6 +3,7 @@ package com.liu.controller;
 import com.liu.consumer.ReceiverA;
 import com.liu.productor.SenderA;
 import com.liu.productor.SenderB;
+import com.liu.productor.UserSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +16,10 @@ public class TestController {
     @Autowired
     private SenderB sendB;
 
-
     @Autowired
-    private ReceiverA receiverA;
+    private UserSender userSender;
+
+
 
     /**
      * 发送测试消息队列 生产者多消费者
@@ -43,5 +45,8 @@ public class TestController {
             sendB.send("hello:"+i);
         }
     }
-
+    @GetMapping ("/user")
+    public void produceUser(){
+        userSender.send();
+    }
 }
