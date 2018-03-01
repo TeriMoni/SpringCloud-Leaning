@@ -1,9 +1,7 @@
 package com.liu.controller;
 
 import com.liu.consumer.ReceiverA;
-import com.liu.productor.SenderA;
-import com.liu.productor.SenderB;
-import com.liu.productor.UserSender;
+import com.liu.productor.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +16,12 @@ public class TestController {
 
     @Autowired
     private UserSender userSender;
+
+    @Autowired
+    private TopicSender topicSender;
+
+    @Autowired
+    private FanoutSender fanoutSender;
 
 
 
@@ -48,5 +52,21 @@ public class TestController {
     @GetMapping ("/user")
     public void produceUser(){
         userSender.send();
+    }
+
+    /**
+     * topic exchange类型rabbitmq测试
+     */
+    @GetMapping("/topic")
+    public void topicTest() {
+        topicSender.send();
+    }
+
+    /**
+     * fanout exchange类型rabbitmq测试
+     */
+    @GetMapping("/fanout")
+    public void fanoutTest() {
+        fanoutSender.send();
     }
 }
