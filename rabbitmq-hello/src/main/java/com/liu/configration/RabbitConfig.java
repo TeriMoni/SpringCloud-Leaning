@@ -12,4 +12,9 @@ public class RabbitConfig {
     public Queue helloQueue() {
         return new Queue("hello");
     }
+
+    @Bean
+    public Queue userQueue() {
+        return new Queue("userQueue");
+    }
 }
