@@ -1,4 +1,4 @@
-package com.liu.Configration;
+package com.liu.configration;
 
 
 import org.springframework.amqp.core.Queue;
