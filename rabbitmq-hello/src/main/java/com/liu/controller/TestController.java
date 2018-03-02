@@ -23,6 +23,9 @@ public class TestController {
     @Autowired
     private FanoutSender fanoutSender;
 
+    @Autowired
+    private CallBackSender callBackSender;
+
 
 
     /**
@@ -68,5 +71,10 @@ public class TestController {
     @GetMapping("/fanout")
     public void fanoutTest() {
         fanoutSender.send();
+    }
+
+    @GetMapping("/callback")
+    public void callbak() {
+        callBackSender.send();
     }
 }
