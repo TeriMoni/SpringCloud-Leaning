@@ -28,5 +28,6 @@
         <module>turbine</module>
         <module>api-gateway</module>
         <module>rabbitmq-hello</module>
+        <module>power-spider</module>
     </modules>
 </project>
