@@ -2,8 +2,6 @@ package com.liu.service;
 
 import com.liu.mapper.AppInfoMapper;
 import com.liu.model.AppInfo;
-import com.liu.repository.AppInfoRepository;
-import com.liu.repository.UserRepository;
 import com.liu.utils.DateUtil;
 import com.liu.utils.JsonUtil;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -13,7 +11,6 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
-import org.noggit.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
